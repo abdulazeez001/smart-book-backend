@@ -24,6 +24,12 @@ This project is a **TypeScript-based automation agent** built to demonstrate pow
   <img src="./architecture.png" alt="Architecture Diagram" width="600"/>
 </p>
 
+## **Swagger URL**
+
+<p align="center">
+  <img src="./images/swagger.png" alt="Swagger Doc" width="600"/>
+</p>
+
 ## **Images**
 
 <p align="center">
