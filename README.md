@@ -24,6 +24,33 @@ This project is a **TypeScript-based automation agent** built to demonstrate pow
   <img src="./architecture.png" alt="Architecture Diagram" width="600"/>
 </p>
 
+## **Images**
+
+<p align="center">
+  <img src="./images/1.png" alt="Architecture Diagram" width="600"/>
+</p>
+<p align="center">
+  <img src="./images/2.png" alt="Architecture Diagram" width="600"/>
+</p>
+<p align="center">
+  <img src="./images/3.png" alt="Architecture Diagram" width="600"/>
+</p>
+<p align="center">
+  <img src="./images/4.png" alt="Architecture Diagram" width="600"/>
+</p>
+<p align="center">
+  <img src="./images/6.png" alt="Architecture Diagram" width="600"/>
+</p>
+<p align="center">
+  <img src="./images/7.png" alt="Architecture Diagram" width="600"/>
+</p>
+<p align="center">
+  <img src="./images/8.png" alt="Architecture Diagram" width="600"/>
+</p>
+<p align="center">
+  <img src="./images/10.png" alt="Architecture Diagram" width="600"/>
+</p>
+
 ## Running the app
 
 ```bash
