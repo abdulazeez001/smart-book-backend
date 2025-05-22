@@ -24,6 +24,16 @@ This project is a **TypeScript-based automation agent** built to demonstrate pow
   <img src="./architecture.png" alt="Architecture Diagram" width="600"/>
 </p>
 
+## **Stack**
+
+- **Language:** TypeScript, Node.js
+- **Database :** RabbitMQ.
+- **Asynchromous Task :** RabbitMQ.
+- **Browser Manager:** Generic-pool: Help to manage spin up servers
+- **Scraping:** Puppeteer: For crawling
+- **LLM:** OpenAI API - For summarization and data enrichment
+- **Automation:** Make.com
+
 ## **Swagger URL**
 
 <p align="center">
@@ -487,16 +497,6 @@ $ yarn run start:prod
 }
 
 ```
-
-Stack
-
-- **Language:** TypeScript, Node.js
-- **Database :** RabbitMQ.
-- **Asynchromous Task :** RabbitMQ.
-- **Browser Manager:** Generic-pool: Help to manage spin up servers
-- **Scraping:** Puppeteer: For crawling
-- **LLM:** OpenAI API - For summarization and data enrichment
-- **Automation:** Make.com
 
 #### \*\*✅ Documentation http://localhost:50002/api-docs
 
