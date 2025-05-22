@@ -27,8 +27,8 @@ This project is a **TypeScript-based automation agent** built to demonstrate pow
 ## **Stack**
 
 - **Language:** NestJs, TypeScript, Node.js
-- **Database :** RabbitMQ.
-- **Asynchromous Task :** RabbitMQ.
+- **Database :** PostqresSQL.(TypeORM)
+- **Asynchronous Task :** RabbitMQ.
 - **Browser Manager:** Generic-pool: Help to manage spin up servers
 - **Scraping:** Puppeteer: For crawling
 - **LLM:** OpenAI API - For summarization and data enrichment
