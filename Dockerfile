@@ -1,37 +1,55 @@
-FROM node:20.17.0-alpine as base
+# Build-time stage
+FROM node:16-slim AS build
 
-FROM base as builder
+RUN mkdir -p /home/node/app && chown node:node /home/node/app
 
-# deps for post-install scripts
-RUN apk add --update --no-cache \
-    python3 \
-    make \
-    git \
-    g++
+WORKDIR /home/node/app
 
-WORKDIR /usr/src/app
+USER node
 
-COPY package.json ./
-COPY yarn.lock ./
-
+COPY --chown=node:node package.json ./
 
 RUN yarn install
 
-FROM base
+COPY --chown=node:node . .
 
-WORKDIR /usr/src/app
+RUN yarn build \
+  && yarn apidoc
 
-COPY --from=builder /usr/src/app/node_modules ./node_modules
+# Run-time stage
+FROM node:16-slim
 
-COPY . .
+# Install latest chrome dev package and fonts to support major charsets (Chinese, Japanese, Arabic, Hebrew, Thai and a few others)
+# Note: this installs the necessary libs to make the bundled version of Chromium that Puppeteer
+# installs, work.
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+# hadolint ignore=DL3008,DL3015
+RUN apt-get update \
+  && apt-get install -y wget gnupg \
+  && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+  && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
+  && apt-get update \
+  && apt-get install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 libxshmfence1\
+  --no-install-recommends \
+  && rm -rf /var/lib/apt/lists/* && mkdir -p /home/node/app && chown node:node /home/node/app
 
-ARG NODE_ENV=production 
-ENV NODE_ENV=${NODE_ENV}
+WORKDIR /home/node/app
 
-RUN yarn build
+USER node
 
-EXPOSE 3000
+COPY --chown=node:node package.json ./
 
-CMD [ "node", "dist/main.js" ]
+# RUN npm ci --only=production && npm install pm2 -g
+RUN yarn 
 
-# trigger build
+# ENV PORT=
+# ENV DB_URL="mongodb://host.docker.internal/tin-service"
+# ENV REDIS_URL="redis://host.docker.internal:6379"
+
+COPY --chown=node:node --from=build /home/node/app/dist ./dist
+COPY --chown=node:node --from=build /home/node/app/docs ./docs
+
+EXPOSE 30112
+
+# CMD ["pm2-runtime", "start", "ecosystem.config.js"]
+CMD ["node", "dist/main.js"]
