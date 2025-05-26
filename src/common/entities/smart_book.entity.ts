@@ -29,30 +29,6 @@ export class SmartBook {
   @Column({ nullable: true })
   discountedPrice: string;
 
-  @Column({ nullable: true })
-  sku: string;
-
-  @Column({ nullable: true })
-  isbn10: string;
-
-  @Column({ nullable: true })
-  isbn13: string;
-
-  @Column({ nullable: true })
-  publisher: string;
-
-  @Column({ nullable: true })
-  publicationDate: string;
-
-  @Column({ nullable: true })
-  printLength: string;
-
-  @Column({ nullable: true })
-  language: string;
-
-  @Column({ nullable: true })
-  dimensions: string;
-
   @Column('simple-array', { nullable: true })
   author: string[];
 
@@ -62,38 +38,8 @@ export class SmartBook {
   @Column({ nullable: true })
   search: string;
 
-  @Column({ nullable: true })
-  category: string;
-
-  @Column({ nullable: true })
-  price: string;
-
-  @Column({ nullable: true })
-  stock: string;
-
-  @Column({ nullable: true })
-  printlength: string;
-
-  @Column({ nullable: true })
-  publicationdate: string;
-
-  @Column({ nullable: true, name: 'isbn-10' })
-  isbn_10: string;
-
-  @Column({ nullable: true, name: 'isbn-13' })
-  isbn_13: string;
-
-  @Column('simple-array', { nullable: true })
-  tags: string[];
-
   @Column({ type: 'text', nullable: true })
   description: string;
-
-  @Column({ nullable: true })
-  rating: string;
-
-  @Column({ nullable: true })
-  ratingCount: string;
 
   @Column({ nullable: true })
   summary: string;

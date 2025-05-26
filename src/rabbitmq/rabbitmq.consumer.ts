@@ -5,7 +5,7 @@ import amqp, {
 } from 'amqp-connection-manager';
 import { ConsumeMessage, ConfirmChannel } from 'amqplib';
 import { queueTopology } from '../common/utils/queue-topology';
-import { BillsService } from 'src/bills/bills.service';
+import { ScrapersService } from 'src/scraper/scraper.service';
 
 const isTls = process.env.RABBITMQ_ISTLS === 'true';
 
@@ -25,8 +25,8 @@ const connectionOptions = {
 export class RabbitmqConsumerService implements OnModuleInit {
   private connection: AmqpConnectionManager;
   private consumerChannel: ChannelWrapper;
-  private scrapeService: BillsService;
-  constructor(scrapeService: BillsService) {
+  private scrapeService: ScrapersService;
+  constructor(scrapeService: ScrapersService) {
     this.scrapeService = scrapeService;
   }
 
@@ -48,18 +48,62 @@ export class RabbitmqConsumerService implements OnModuleInit {
             queue,
             async (msg: ConsumeMessage | null) => {
               if (msg) {
+                const maxRetries = 5;
+                let retryCount = 0;
+                if (
+                  msg.properties.headers &&
+                  msg.properties.headers['x-retry-count']
+                ) {
+                  retryCount = msg.properties.headers['x-retry-count'];
+                }
+
                 try {
                   const content = JSON.parse(msg.content.toString());
+                  // Attach retryCount and maxRetries to the content
+                  const enrichedContent = {
+                    ...content,
+                    retryCount,
+                    maxRetries,
+                  };
                   console.log(`Received message for worker: ${worker}`);
-                  console.log(content);
 
                   // Handle message logic here per worker
-                  await this.handleMessage(worker, content);
+                  await this.handleMessage(worker, enrichedContent);
 
                   channel.ack(msg);
                 } catch (err) {
+                  console.log({ err });
                   console.error('Failed to process message:', err);
-                  channel.nack(msg, false, false); // reject and discard
+
+                  // Retry logic with a limit and delay
+                  if (retryCount <= maxRetries) {
+                    const baseDelayMs = 5000;
+                    const retryDelayMs = baseDelayMs * Math.pow(2, retryCount);
+
+                    setTimeout(() => {
+                      // Republish with incremented retry count
+                      channel.publish(
+                        msg.fields.exchange,
+                        msg.fields.routingKey,
+                        msg.content,
+                        {
+                          headers: {
+                            ...msg.properties.headers,
+                            'x-retry-count': retryCount + 1,
+                          },
+                          persistent: true,
+                        },
+                      );
+                      // Remove the message from the queue
+                      channel.nack(msg, false, false);
+                    }, retryDelayMs);
+                  } else {
+                    // Discard the message after max retries
+                    console.error(
+                      `Message discarded after ${maxRetries} retries`,
+                    );
+                    channel.nack(msg, false, false); // reject and discard
+                  }
                 }
               }
             },
@@ -85,16 +129,24 @@ export class RabbitmqConsumerService implements OnModuleInit {
         break;
       case 'scraper':
         console.log('Processing scrape worker:', message);
-        await this.scrapeService.scrapeData(message.data);
+        await this.scrapeService.scrapeData({
+          ...message.data,
+          retryCount: message.retryCount,
+          maxRetries: message.maxRetries,
+        });
         break;
 
       case 'summary':
         console.log('Processing summary worker:', message);
-        await this.scrapeService.summerizer(message.data);
+        await this.scrapeService.summerizer({
+          ...message.data,
+          retryCount: message.retryCount,
+          maxRetries: message.maxRetries,
+        });
         break;
 
       case 'webhook':
-        console.log('Processing webhook worker:', message);
+        // console.log('Processing webhook worker:', message);
         await this.scrapeService.webhook(message.data);
         break;
       default:

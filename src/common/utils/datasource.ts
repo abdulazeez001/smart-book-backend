@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { DataSource } from 'typeorm';
 import { join } from 'path';
 import { SmartBook } from '../entities/smart_book.entity';
-import { Bill } from '../../bills/entities/bill.entity';
+import { Process } from '../../scraper/entities/scraper.entity';
 
 export const connectionSource = new DataSource({
   type: process.env.DB_TYPE as 'postgres',
@@ -15,7 +15,7 @@ export const connectionSource = new DataSource({
       ? process.env.DB_NAME_TEST
       : process.env.DB_NAME,
   logging: true,
-  entities: [SmartBook, Bill],
+  entities: [SmartBook, Process],
   migrations: [join(__dirname, '/../../', 'database/migrations/**/*{.ts,.js}')],
   synchronize:
     process.env.NODE_ENV === 'development' ||

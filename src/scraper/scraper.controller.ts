@@ -8,12 +8,12 @@ import {
   HttpCode,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam, ApiBody } from '@nestjs/swagger';
-import { BillsService } from './bills.service';
+import { ScrapersService } from './scraper.service';
 
-@ApiTags('Bills')
+@ApiTags('Scrapers')
 @Controller('/v1')
-export class BillsController {
-  constructor(private readonly billsService: BillsService) {}
+export class ScrapersController {
+  constructor(private readonly scrapesService: ScrapersService) {}
 
   @ApiOperation({ summary: 'Initiate Scrape' })
   @ApiBody({
@@ -24,7 +24,7 @@ export class BillsController {
   @Post('/scrape')
   @HttpCode(HttpStatus.OK)
   async initiateScrape(@Body('search') search: string) {
-    const response = await this.billsService.initiateScrape(search);
+    const response = await this.scrapesService.initiateScrape(search);
     return {
       response: response,
       message: 'Scrape initiated successfully!',
@@ -35,11 +35,11 @@ export class BillsController {
   @ApiParam({ name: 'jobId', description: 'Job ID of the Process' })
   @Get('/status/:jobId')
   @HttpCode(HttpStatus.OK)
-  async getBillByJobId(@Param('jobId') jobId: string) {
-    const response = await this.billsService.getBillByJobId(jobId);
+  async getProcessByJobId(@Param('jobId') jobId: string) {
+    const response = await this.scrapesService.getProcessByJobId(jobId);
     return {
       response,
-      message: 'Bill retrieved successfully!',
+      message: 'Process retrieved successfully!',
     };
   }
 
@@ -48,7 +48,7 @@ export class BillsController {
   @Get('/results/:jobId')
   @HttpCode(HttpStatus.OK)
   async getSmartBooksByJobId(@Param('jobId') jobId: string) {
-    const response = await this.billsService.getSmartBooksByJobId(jobId);
+    const response = await this.scrapesService.getSmartBooksByJobId(jobId);
     return {
       response,
       message: 'SmartBooks retrieved successfully!',

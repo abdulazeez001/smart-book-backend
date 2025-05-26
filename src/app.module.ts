@@ -3,7 +3,7 @@ import { AppController } from './app.controller';
 import { ConfigModule } from '@nestjs/config';
 import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
-import { BillsModule } from './bills/bills.module';
+import { ScrapersModule } from './scraper/scraper.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { OpenaiModule } from './openai/openai.module';
 import { RabbitMQModule } from './rabbitmq/rabbitmq.module';
@@ -16,7 +16,7 @@ import { HttpRequestModule } from './http-request/http-request.module';
       isGlobal: true, // Makes the configuration available globally
     }),
     DatabaseModule,
-    BillsModule,
+    ScrapersModule,
     RabbitMQModule,
     OpenaiModule,
     HttpRequestModule,

@@ -3,8 +3,8 @@ import amqp from 'amqp-connection-manager';
 import { ConfirmChannel } from 'amqplib';
 import 'dotenv/config';
 import { RabbitmqConsumerService } from './rabbitmq.consumer';
-import { BillsService } from 'src/bills/bills.service';
-import { Bill } from '../bills/entities/bill.entity';
+import { ScrapersService } from 'src/scraper/scraper.service';
+import { Process } from '../scraper/entities/scraper.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RabbitmqService } from './rabbitmq.service';
 import { OpenaiService } from 'src/openai/openai.service';
@@ -69,7 +69,7 @@ channelWrapper.on('close', () => {
 @Global()
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Bill]),
+    TypeOrmModule.forFeature([Process]),
     TypeOrmModule.forFeature([SmartBook]),
   ],
   providers: [
@@ -79,7 +79,7 @@ channelWrapper.on('close', () => {
     },
     RabbitmqConsumerService,
     SmartBook,
-    BillsService,
+    ScrapersService,
     RabbitmqService,
     OpenaiService,
     HttpRequest,

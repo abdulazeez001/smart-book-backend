@@ -42,7 +42,7 @@ export class BrowserManagerService implements OnModuleDestroy {
 
     const options = {
       max: browserInstances,
-      min: browserInstances,
+      min: 0,
     };
 
     this.browserPagePool = genericPool.createPool(factory, options);
@@ -58,6 +58,28 @@ export class BrowserManagerService implements OnModuleDestroy {
 
   getPool(): genericPool.Pool<any> {
     return this.browserPagePool;
+  }
+
+  /**
+   * Acquire a browser instance from the pool.
+   */
+  async acquireBrowser(): Promise<any> {
+    return this.browserPagePool.acquire();
+  }
+
+  /**
+   * Release a browser instance back to the pool.
+   */
+  async releaseBrowser(browserPage: any): Promise<void> {
+    await this.browserPagePool.release(browserPage);
+  }
+
+  /**
+   * Create a new tab (page) in the given browser instance.
+   */
+  async createNewTab(browserPage: any): Promise<any> {
+    const newPage = await browserPage.browser.newPage();
+    return newPage;
   }
 
   async onModuleDestroy() {

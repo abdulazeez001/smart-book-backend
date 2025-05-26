@@ -9,17 +9,6 @@ import {
   ValidationError,
 } from '@nestjs/common';
 import { formatValidationError } from './common/helpers';
-// import { PuppeteerManager } from './common/libs/puppeteer';
-// import { PageService } from './common/libs/browserManager/page';
-// import { BrowserManagerService } from './common/libs/browserManager/index';
-// import { ConfigService } from '@nestjs/config';
-
-// import browserManagerServiceInstance from './common/libs/browserManager/index';
-// async function onSignal() {
-//   console.log('Cleaning up resources...');
-//   await browserManagerServiceInstance.drain();
-//   await browserManagerServiceInstance.clear();
-// }
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -49,15 +38,5 @@ async function bootstrap() {
   app.enableCors();
 
   await app.listen(process.env.HTTP_PORT || 3000);
-  // Graceful shutdown
-  // const shutdown = async () => {
-  //   console.log('Received shutdown signal, cleaning up...');
-  //   await onSignal();
-  //   await app.close();
-  //   process.exit(0);
-  // };
-
-  // process.on('SIGINT', shutdown);
-  // process.on('SIGTERM', shutdown);
 }
 bootstrap();

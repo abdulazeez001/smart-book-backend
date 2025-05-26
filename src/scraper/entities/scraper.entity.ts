@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class Bill {
+export class Process {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

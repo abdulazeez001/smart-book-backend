@@ -31,14 +31,12 @@ export class OpenaiService {
       `Each array should contain one or more author names extracted from the corresponding book cover. ` +
       `If the author(s) cannot be confidently identified, use ["N/A"] for that entry. ` +
       `Example response: { "0": ["J.K. Rowling"], "1": ["Author One", "Author Two"], "2": ["N/A"] }.` +
-      `Do not include any explanation or text outside the JSON object.`;
+      `Do not include any explanation, markdown or text outside the JSON object.`;
 
     const imageMessages = base64Images.map((base64Image: string) => ({
       type: 'image_url' as const,
       image_url: { url: base64Image },
     }));
-
-    console.log({ imageMessages });
 
     const response = await this.OpenAIClient.chat.completions.create({
       model: 'gpt-4o',
@@ -88,8 +86,9 @@ export class OpenaiService {
       `For each input, do the following:\n` +
       `1. Generate a 1–2 sentence summary.\n` +
       `2. Rate how relevant the description is to the keyword (0–100).\n\n` +
-      `Return a JSON array in the same order, with the format:\n` +
-      `{\n  "summary": string,\n  "relevance_score": number\n}`;
+      `Return ONLY a valid JSON array of objects in the same order, with the format:\n` +
+      `[{"summary": string, "relevance_score": number}]\n` +
+      `Do not include any explanation, markdown, or text outside the JSON array. Do NOT wrap the output in \`\`\` or any other formatting. The output must be directly parsable by JSON.parse.`;
 
     const formattedInput = inputs
       .map(
