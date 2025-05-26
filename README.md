@@ -99,6 +99,10 @@ For more details, see the Swagger documentation.
   <img src="./images/swagger.png" alt="Swagger Doc" width="600"/>
 </p>
 
+## **Google sheet csv link**
+
+You can access the Make.com Google Sheet [here](https://docs.google.com/spreadsheets/d/1PYPo_Wz6MBPdfo8idIVVGTOmPsTqfM0TV0YXNpuxyjA/edit?gid=0#gid=0).
+
 ## **Images**
 
 <p align="center">
